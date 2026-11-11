@@ -1,0 +1,75 @@
+schema: spec-driven
+
+context: |
+  Proyecto: Plataforma Interactiva "Videojuegos contra las Drogas", PWA educativa de
+  prevención del consumo de sustancias psicoactivas y alcohol en jóvenes.
+
+  Idioma: español. Todos los artefactos se escriben en español; las palabras clave
+  estructurales (SHALL, MUST, WHEN, THEN) y los encabezados del esquema se mantienen
+  en inglés.
+
+  Stack: frontend HTML5 + CSS3 (custom properties, Flexbox/Grid, mobile-first) con
+  JavaScript Vanilla ES6+; backend Node.js 18+ LTS + Express (API REST); persistencia
+  SQLite3 en modo WAL; integración con OpenAI API (chat asistido) exclusivamente desde
+  el backend.
+
+  Estructura: public/ (cliente: css, js, assets), src/ (controllers, middleware,
+  routes, services), config/database.js, database/schema.sql, server.js.
+
+  Endpoints previstos: POST /api/solicitudes-ayuda, GET /api/directorio,
+  GET /api/recursos, POST /api/juego/estadisticas.
+
+  Restricciones de dominio:
+  - Anonimato por diseño: no se almacenan IPs, cookies de seguimiento ni datos
+    personales; el campo "nombre" es opcional y por defecto vale "Anónimo".
+  - Política Cero Anuncios (REQ-WH-01); sin monetización ni analítica de terceros.
+  - Respuestas JSON uniformes: {status, code, message, data} y
+    {status, code, message, errors}.
+  - SQLite solo con consultas preparadas (?); nunca concatenar SQL.
+  - OPENAI_API_KEY y demás secretos solo en .env del servidor, nunca en el cliente
+    ni en el repositorio.
+  - Seguridad HTTP con helmet y rate limiting en endpoints públicos.
+  - Contenido de salud veraz, neutral y sin estigmas; el asistente IA se restringe a
+    prevención, salud mental y adicciones.
+  - Accesibilidad WCAG 2.1 AA y paleta institucional:
+    --color-primary #2561BA, --color-secondary #365687, --color-tertiary #324054,
+    --color-background #F4F7FA, --color-danger #E53E3E.
+  - PWA responsive de 320px a 4K; controles táctiles, teclado y gamepad.
+
+  Documentos fuente (leer antes de planificar; no copiar su contenido literalmente):
+  - "especificaci_n_de_requisitos_de_software_srs (1).md" (SRS: RF-*, RNF-*, REQ-*)
+  - "especificaci_n_de_arquitectura_de_software_sad (1).md" (SAD: capas y componentes)
+  - "est_ndar_de_desarrollo_y_buenas_pr_cticas (1).md" (estándares de código)
+  - "gu_a_de_dise_o_ui_ux_frontend (1).md" (design system y UI/UX)
+
+rules:
+  proposal:
+    - Vincular el cambio con los identificadores del SRS (RF-*, RNF-*, REQ-*) que lo justifican.
+    - Declarar explícitamente el alcance y el fuera de alcance.
+    - Incluir una sección breve de impacto en privacidad/anonimato y en seguridad.
+  specs:
+    - Usar una sola capacidad por spec, con rutas y nombres de requisito claros.
+    - Cada requisito SHALL/MUST debe incluir al menos un escenario (#### Scenario) con WHEN/THEN.
+    - Cubrir camino feliz, validación de entrada y errores HTTP (400/500) cuando aplique.
+    - Especificar el contrato JSON de la API cuando el cambio toque endpoints.
+  design:
+    - Respetar la arquitectura en capas y la estructura de carpetas del estándar del proyecto.
+    - No agregar dependencias sin justificar por qué la solución nativa no basta.
+    - Documentar el esquema SQLite afectado y el uso de consultas preparadas.
+    - Mantener los secretos en el servidor y describir el manejo de errores con respuestas uniformes.
+  tasks:
+    - 'Escribir cada tarea como checkbox: "- [ ] 1.1 Descripción".'
+    - Incluir tareas de verificación (prueba manual o automatizada) por cada requisito.
+    - 'Ordenar por capas: base de datos, servicios, controladores, rutas, frontend.'
+    - Terminar con una tarea de commit siguiendo Conventional Commits.
+
+operations:
+  apply:
+    guidance:
+      - Antes de marcar una tarea como completada, verificar el endpoint o la vista afectada.
+      - No registrar IPs ni datos personales en los logs de la aplicación.
+      - No subir .env, database.sqlite ni node_modules; revisar .gitignore antes de commitear.
+  archive:
+    guidance:
+      - Resumir los requisitos implementados y su trazabilidad con el SRS.
+      - Verificar que las specs principales reflejen el comportamiento realmente implementado.
