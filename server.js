@@ -5,7 +5,7 @@
  * Descripción: Punto de entrada principal del servidor HTTP Express.
  * Arquitectura: Capa de Presentación y Servidor REST en CommonJS (Node.js 18+ LTS).
  * Principios: Anonimato por diseño (RNF-SEC-01), seguridad de cabeceras (RNF-SEC-02),
- *             control de payload y respuestas JSON estandarizadas.
+ *             control de payload, inicialización DDL y respuestas JSON unificadas.
  * ==============================================================================
  */
 
@@ -15,6 +15,10 @@ require('dotenv').config();
 const express = require('express');
 const path = require('path');
 const helmet = require('helmet');
+
+// Módulos de infraestructura y enrutamiento
+const { inicializarBaseDeDatos } = require('./config/database');
+const apiRoutes = require('./src/routes/api.routes');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -63,14 +67,32 @@ app.get('/api/healthcheck', (req, res) => {
     });
 });
 
-// [TODO: Conectar api.routes.js en el paso 5.3]
+// 5. Montaje de Rutas de la API REST
+app.use('/api', apiRoutes);
+
+// 6. Middleware Catch-all para Rutas API No Definidas (HTTP 404)
+app.use('/api/*', (req, res) => {
+    return res.status(404).json({
+        status: 'error',
+        code: 404,
+        message: 'El endpoint solicitado no existe en la API.',
+        errors: []
+    });
+});
 
 // [TODO: Conectar errorHandler.js en el paso 6.1]
 
-// 5. Inicialización del Servidor HTTP
-app.listen(PORT, () => {
-    console.log(`[Servidor] Plataforma operativa en http://localhost:${PORT}`);
-    console.log(`[Servidor] Entorno de ejecución: ${NODE_ENV}`);
-});
+// 7. Inicialización de Base de Datos y Arranque del Servidor HTTP
+inicializarBaseDeDatos()
+    .then(() => {
+        app.listen(PORT, () => {
+            console.log(`[Servidor] Plataforma operativa en http://localhost:${PORT}`);
+            console.log(`[Servidor] Entorno de ejecución: ${NODE_ENV}`);
+        });
+    })
+    .catch((err) => {
+        console.error('[Servidor] Error crítico al inicializar la base de datos:', err.message);
+        process.exit(1);
+    });
 
 module.exports = app;
