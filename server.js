@@ -19,6 +19,7 @@ const helmet = require('helmet');
 // Módulos de infraestructura y enrutamiento
 const { inicializarBaseDeDatos } = require('./config/database');
 const apiRoutes = require('./src/routes/api.routes');
+const errorHandler = require('./src/middleware/errorHandler');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -80,7 +81,8 @@ app.use('/api/*', (req, res) => {
     });
 });
 
-// [TODO: Conectar errorHandler.js en el paso 6.1]
+// 7. Middleware Centralizado de Manejo de Excepciones
+app.use(errorHandler);
 
 // 7. Inicialización de Base de Datos y Arranque del Servidor HTTP
 inicializarBaseDeDatos()
