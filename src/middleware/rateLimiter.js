@@ -19,6 +19,8 @@ const apiLimiter = rateLimit({
   limit: 10,           // Máximo 10 peticiones por ventana
   standardHeaders: true, // Retorna cabeceras estándar IETF `RateLimit-*`
   legacyHeaders: false,  // Desactiva cabeceras obsoletas `X-RateLimit-*`
+  validate: { default: true },
+  keyGenerator: (req) => req.headers['x-client-id'] || req.ip,
 
   // Manejador de respuesta unificada HTTP 429 Too Many Requests
   handler: (req, res, next, options) => {
@@ -42,6 +44,8 @@ const iaLimiter = rateLimit({
   limit: 5,            // Máximo 5 consultas por minuto
   standardHeaders: true,
   legacyHeaders: false,
+  validate: { default: true },
+  keyGenerator: (req) => req.headers['x-client-id'] || req.ip,
 
   // Manejador empático y claro con formato JSON homogéneo
   handler: (req, res, next, options) => {
