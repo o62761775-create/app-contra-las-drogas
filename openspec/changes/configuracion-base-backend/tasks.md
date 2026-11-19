@@ -8,7 +8,7 @@
 ## 2. Dependencias y Manifiesto de Ejecución
 
 - [x] 2.1 Crear el archivo `package.json` con nombre `videojuegos-contra-drogas-backend`, versión `1.0.0`, scripts `start` y `dev`, y dependencias de producción (`express`, `sqlite3`, `dotenv`, `helmet`, `express-rate-limit`, `openai`), verificando que sea JSON válido.
-- [ ] 2.2 Ejecutar `npm install` y verificar la resolución e instalación limpia de las dependencias requeridas en `package-lock.json` y `node_modules`.
+- [x] 2.2 Ejecutar `npm install` y verificar la resolución e instalación limpia de las dependencias requeridas en `package-lock.json` y `node_modules`.
 
 ## 3. Estructura de Directorios Modular
 
